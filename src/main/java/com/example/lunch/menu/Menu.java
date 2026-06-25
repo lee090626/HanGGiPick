@@ -37,4 +37,11 @@ public class Menu {
         this.category = category;
         this.cafeteria = cafeteria;
     }
+
+    public void update(LocalDate menuDate, String menuName, String category, String cafeteria) {
+        this.menuDate = menuDate;
+        this.menuName = menuName;
+        this.category = category;
+        this.cafeteria = cafeteria;
+    }
 }

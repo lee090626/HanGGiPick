@@ -2,6 +2,7 @@ package com.example.lunch.menu;
 
 import com.example.lunch.menu.dto.MenuCreateRequest;
 import com.example.lunch.menu.dto.MenuResponse;
+import com.example.lunch.menu.dto.MenuUpdateRequest;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,20 @@ public class MenuService {
         return menus.stream()
                 .map(MenuResponse::from)
                 .toList();
+    }
+
+    @Transactional
+    public MenuResponse updateMenu(Long id, MenuUpdateRequest request) {
+        Menu menu = menuRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + id));
+
+        menu.update(
+                request.menuDate(),
+                request.menuName(),
+                request.category(),
+                request.cafeteria()
+        );
+
+        return MenuResponse.from(menu);
     }
 }
