@@ -41,4 +41,9 @@ public class Review {
         this.comment = comment;
         this.nickname = nickname;
     }
+
+    public void update(int rating, String comment) {
+        this.rating = rating;
+        this.comment = comment;
+    }
 }

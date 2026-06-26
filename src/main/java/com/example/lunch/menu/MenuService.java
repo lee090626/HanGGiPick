@@ -1,8 +1,10 @@
 package com.example.lunch.menu;
 
+import com.example.lunch.menu.dto.AverageRatingResponse;
 import com.example.lunch.menu.dto.MenuCreateRequest;
 import com.example.lunch.menu.dto.MenuResponse;
 import com.example.lunch.menu.dto.MenuUpdateRequest;
+import com.example.lunch.review.ReviewRepository;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public MenuResponse createMenu(MenuCreateRequest request) {
@@ -48,5 +51,17 @@ public class MenuService {
         );
 
         return MenuResponse.from(menu);
+    }
+
+    public AverageRatingResponse getAverageRating(Long id) {
+        menuRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + id));
+
+        double averageRating = reviewRepository.findByMenuId(id).stream()
+                .mapToInt(review -> review.getRating())
+                .average()
+                .orElse(0.0);
+
+        return new AverageRatingResponse(id, averageRating);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.lunch.menu;
 
+import com.example.lunch.menu.dto.AverageRatingResponse;
 import com.example.lunch.menu.dto.MenuCreateRequest;
 import com.example.lunch.menu.dto.MenuResponse;
 import com.example.lunch.menu.dto.MenuUpdateRequest;
@@ -64,5 +65,10 @@ public class MenuController {
     @GetMapping("/{id}/reviews")
     public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable Long id) {
         return ResponseEntity.ok(reviewService.getReviewsByMenuId(id));
+    }
+
+    @GetMapping("/{id}/average-rating")
+    public ResponseEntity<AverageRatingResponse> getAverageRating(@PathVariable Long id) {
+        return ResponseEntity.ok(menuService.getAverageRating(id));
     }
 }
