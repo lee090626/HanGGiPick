@@ -3,6 +3,9 @@ package com.example.lunch.menu;
 import com.example.lunch.menu.dto.MenuCreateRequest;
 import com.example.lunch.menu.dto.MenuResponse;
 import com.example.lunch.menu.dto.MenuUpdateRequest;
+import com.example.lunch.review.ReviewService;
+import com.example.lunch.review.dto.ReviewCreateRequest;
+import com.example.lunch.review.dto.ReviewResponse;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MenuController {
 
     private final MenuService menuService;
+    private final ReviewService reviewService;
 
     @PostMapping
     public ResponseEntity<MenuResponse> createMenu(@RequestBody MenuCreateRequest request) {
@@ -46,5 +50,19 @@ public class MenuController {
             @RequestBody MenuUpdateRequest request
     ) {
         return ResponseEntity.ok(menuService.updateMenu(id, request));
+    }
+
+    @PostMapping("/{id}/reviews")
+    public ResponseEntity<ReviewResponse> createReview(
+            @PathVariable Long id,
+            @RequestBody ReviewCreateRequest request
+    ) {
+        ReviewResponse response = reviewService.createReview(id, request);
+        return ResponseEntity.created(URI.create("/menus/" + id + "/reviews/" + response.id())).body(response);
+    }
+
+    @GetMapping("/{id}/reviews")
+    public ResponseEntity<List<ReviewResponse>> getReviews(@PathVariable Long id) {
+        return ResponseEntity.ok(reviewService.getReviewsByMenuId(id));
     }
 }
